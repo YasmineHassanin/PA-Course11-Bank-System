@@ -7,6 +7,7 @@
 #include"ClsDeleteClientScreen.h"
 #include"ClsUpdateClientScreen.h"
 #include"ClsFindClientScreen.h"
+#include"ClsTransactionScreen.h"
 class ClsMainScreen : protected ClsScreen
 {
 private:
@@ -53,7 +54,8 @@ static void _FindClientScreen()
 }
 static void _TransactionScreen()
 {
-	cout << "\n Transaction screen will be here ...\n";
+	//cout << "\n Transaction screen will be here ...\n";
+ClsTransactionScreen::ShowTransactionScreen();
 }
 static void _ManageUsersScreen()
 {
