@@ -5,15 +5,24 @@
 class ClsLoginScreen : protected ClsScreen
 {
 private:
-	static void _Login()
+	static bool _Login()
 	{
 		bool LoginFaild = false;
 		string username, password;
+		short FaildLoginCounter = 0;
+		short numberOfTrials = 3;
 		do
 		{
 			if (LoginFaild)
 			{
+				FaildLoginCounter++;
 				cout << "Error Invalid username/password ! \n";
+				cout << "You have " << numberOfTrials - FaildLoginCounter << " trials" << endl;
+			}
+			if (FaildLoginCounter == numberOfTrials)
+			{
+				cout << "You are blocked after three trials\n";
+				return false;
 			}
 			cout << "Enter username: ";
 			cin >> username;
@@ -23,13 +32,14 @@ private:
 			LoginFaild = CurrentUser.IsEmpty();
 		} while (LoginFaild);
 		ClsMainScreen::ShowMainMenueScreen();
+		return true;
 	}
 public:
-	static void ShowLoginScreen()
+	static bool ShowLoginScreen()
 	{
 		system("cls");
 		_DrawScreenHeader("\tLogin Screen \n");
-		_Login();
+		return _Login();
 	}
 };
 

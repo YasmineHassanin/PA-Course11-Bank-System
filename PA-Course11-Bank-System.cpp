@@ -12,7 +12,10 @@ int main()
 
 	while (true)
 {
-	ClsLoginScreen::ShowLoginScreen();
+	if (!ClsLoginScreen::ShowLoginScreen())
+{
+	break;
+}
 }
 	//ClsMainScreen::ShowMainMenueScreen();
        system("pause>0");
