@@ -9,6 +9,7 @@
 #include"ClsDeleteUserScreen.h"
 #include"ClsUpdateUserScreen.h"
 #include"ClsFindUserScreen.h"
+
 using namespace std;
 class ClsManageUsersScreen :protected ClsScreen
 {
@@ -96,6 +97,11 @@ public:
 	static void ShowManageUsersScreen()
 	{
 		system("cls");
+		if (!CheckAccessRights(ClsUser::enPermissions::eManageUsers))
+		{
+			return;
+		}
+		
 		_DrawScreenHeader("\t\tManage User Screen\n");
 		cout << setw(37) << left << "" << "========================================\n";
 		cout << setw(37) << left << "" << "\t\t Manage users Menu\n";

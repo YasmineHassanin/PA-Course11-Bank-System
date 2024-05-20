@@ -8,6 +8,10 @@
 #include"ClsUpdateClientScreen.h"
 #include"ClsFindClientScreen.h"
 #include"ClsTransactionScreen.h"
+#include"ClsManageUsersScreen.h"
+#include"ClsLoginScreen.h"
+#include"Global.h"
+
 class ClsMainScreen : protected ClsScreen
 {
 private:
@@ -55,15 +59,20 @@ static void _FindClientScreen()
 static void _TransactionScreen()
 {
 	//cout << "\n Transaction screen will be here ...\n";
-ClsTransactionScreen::ShowTransactionScreen();
+	ClsTransactionScreen::ShowTransactionScreen();
 }
 static void _ManageUsersScreen()
 {
-	cout << "\nManage users screen will be here...\n";
+	//cout << "\nManage users screen will be here...\n";
+	ClsManageUsersScreen::ShowManageUsersScreen();
 }
-static void _ShowEndScreen()
+//static void _ShowEndScreen()
+//{
+//	cout << "\nEnd Screen will be here...\n";
+//}
+static void _Logout()
 {
-	cout << "\nEnd Screen will be here...\n";
+	CurrentUser = ClsUser::Find("", "");
 }
 static void _PerformMainMenueOption(enMainMenueOptions option)
 {
@@ -106,7 +115,7 @@ static void _PerformMainMenueOption(enMainMenueOptions option)
 		break;
 	case enMainMenueOptions::Logout:
 		system("cls");
-			_ShowEndScreen();
+		_Logout();
 			break;
 	}
 

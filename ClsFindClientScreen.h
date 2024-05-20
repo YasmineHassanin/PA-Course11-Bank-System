@@ -23,6 +23,10 @@ private:
 public:
 	static void FindClientScreen()
 	{
+		if (!CheckAccessRights(ClsUser::enPermissions::eFindClients))
+		{
+			return;
+		}
 		_DrawScreenHeader("\tFind Clients screen\n");
 		cout << "Please enter the account number you want to find\n";
 		string AccountNumber = ClsInputValidate::ReadString();

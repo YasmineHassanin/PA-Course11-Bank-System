@@ -5,6 +5,7 @@
 #include<vector>
 #include<iomanip>
 #include<fstream>
+#include"Global.h"
 class ClsUser :public ClsPerson
 {
 private:
@@ -173,10 +174,11 @@ public:
 			string line;
 			while (getline(myfile, line))
 			{
-				ClsUser user = _ConvertLineUserObject(line);
+				ClsUser user = _ConvertLineUserObject(line,"#//#");
 				if (user.GetUserName() == username && user.Getpassword() == password)
 				{
-					Vuser.push_back(user);
+					myfile.close();
+					return user;
 				}
 			}
 			myfile.close();
@@ -270,5 +272,15 @@ public:
 	{
 		eAll=-1,eShowListClients=1,eAddNewClients=2,eDeleteClients=4,eUpdateClients=8,eFindClients=16,eTransaction=32,eManageUsers=64
 	};
+	 bool CheckAccessPrmissions(enPermissions permissions)
+	{
+		 /*this->permission ,for object (Currentuser)*/
+		 if (this->permission == enPermissions::eAll)
+			 return true;
+		 if ((permissions & this->permission) == permissions)
+			 return true;
+		 else
+			 return false;
+	}
 };
 

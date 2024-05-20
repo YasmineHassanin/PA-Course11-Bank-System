@@ -9,6 +9,7 @@ class ClsDeleteClientScreen :protected ClsScreen
 private:
 	static void _PrintClient(ClsBankClient Client)
 	{
+		
 		cout << "\nClient Card:";
 		cout << "\n___________________";
 		cout << "\nFirstName   : " << Client.FName;
@@ -24,6 +25,10 @@ private:
 public:
 	static void DeleteCientScreen()
 {
+		if (!CheckAccessRights(ClsUser::enPermissions::eDeleteClients))
+		{
+			return;
+		}
 		_DrawScreenHeader("\tDelete Clients Screen\n");
 	cout << "Please enter the accountNumber you want to delete: " << endl;
 	string accountNumber = ClsInputValidate::ReadString();

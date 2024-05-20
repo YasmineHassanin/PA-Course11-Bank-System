@@ -69,7 +69,9 @@ class ClsUpdateUserScreen :protected ClsScreen
 		user.LName = ClsInputValidate::ReadString();
 		cout << "Please enter the Email: ";
 		user.Email = ClsInputValidate::ReadString();
-		cout << "Please enter the password: ";
+		cout << "Please enter the Phone: ";
+		user.Phone = ClsInputValidate::ReadString();
+		cout << "Please enter the Password: ";
 		user.password = ClsInputValidate::ReadString();
 		cout << "Please enter the permissions: ";
 		user.permission = _ReadPermissionToSet();

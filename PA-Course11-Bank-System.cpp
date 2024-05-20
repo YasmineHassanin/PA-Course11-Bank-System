@@ -2,15 +2,19 @@
 //
 
 #include <iostream>
-#include"ClsBankClient.h"
+//#include"ClsBankClient.h"
+#include"ClsLoginScreen.h"
 using namespace std;
 
 
 int main()
 {
 
-	
-	ClsMainScreen::ShowMainMenueScreen();
+	while (true)
+{
+	ClsLoginScreen::ShowLoginScreen();
+}
+	//ClsMainScreen::ShowMainMenueScreen();
        system("pause>0");
        return 0;
 

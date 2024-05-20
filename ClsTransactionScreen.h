@@ -68,6 +68,10 @@ private:
 public:
 	static void ShowTransactionScreen()
 	{
+		if (!CheckAccessRights(ClsUser::enPermissions::eTransaction))
+		{
+			return;
+		}
 		system("cls");
 		_DrawScreenHeader("\t Transaction screen\n");
 		cout << setw(37) << left << "" << "=====================================\n";

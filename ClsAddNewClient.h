@@ -24,6 +24,7 @@ private:
 	}
 	static void _PrintClient(ClsBankClient Client)
 	{
+		
 			cout << "\nClient Card:";
 		cout << "\n___________________";
 		cout << "\nFirstName   : " << Client.FName;
@@ -41,6 +42,10 @@ public:
 
 	static void ShowAddNewClientListScreen()
 	{
+		if (!CheckAccessRights(ClsUser::enPermissions::eAddNewClients))
+		{
+			return;
+		}
 		_DrawScreenHeader("\tAdd New Clients screen\n");
 			cout << "Please enter the account number you want to add\n";
 			string AccountNumber = ClsInputValidate::ReadString();

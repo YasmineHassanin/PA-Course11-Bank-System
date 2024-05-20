@@ -40,6 +40,10 @@ private:
 public:
 	static void UpdateClientScreen()
 	{
+		if (!CheckAccessRights(ClsUser::enPermissions::eUpdateClients))
+		{
+			return;
+		}
 		_DrawScreenHeader("\tUpdate Clients Screen\n");
 			cout << "Please enter The Account Number You Want :  ";
 			string AccountNumber = ClsInputValidate::ReadString();
