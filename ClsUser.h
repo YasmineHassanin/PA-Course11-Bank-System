@@ -21,7 +21,7 @@ private:
 	bool _MarkedToDeleted = false;
 	struct stLoginRegisterRecord;
 	
-	static  stLoginRegisterRecord _ConvertLoginRegisterLineToRecord(string line,string separator="#//#")
+	/*static  stLoginRegisterRecord _ConvertLoginRegisterLineToRecord(string line,string separator="#//#")
 	 {
 		stLoginRegisterRecord loginregisterrecord;
 		vector<string>loginregisterDataLine = ClsString::SplitString(line, separator);
@@ -30,21 +30,44 @@ private:
 	loginregisterrecord.Password =  loginregisterDataLine[2];
 		loginregisterrecord.permissions = stoi(loginregisterDataLine[3]);
 		return loginregisterrecord;
-	 }
-
+	 }*/
+	static  stLoginRegisterRecord _ConvertLoginRegisterLineToRecord(string line, string separator = "#//#")
+	{
+		stLoginRegisterRecord loginregisterrecord;
+		vector<string>loginregisterDataLine = ClsString::SplitString(line, separator);
+		loginregisterrecord.DateTime = loginregisterDataLine[0];
+		loginregisterrecord.Username = loginregisterDataLine[1];
+		loginregisterrecord.Password = loginregisterDataLine[2];
+		loginregisterrecord.permissions = stoi(loginregisterDataLine[3]);
+		return loginregisterrecord;
+	}
+	//string _PrepareLoginRecord(string separator = "#//#")
+	//{
+	//	string LogginLine = "";
+	//	LogginLine += ClsDateLibrary::GetSystemTimeDateString() + separator;
+	//	LogginLine += username + separator;
+	//	LogginLine +=  EnctyptedPassword(password)+ separator;
+	//	LogginLine += to_string(permission);
+	//	return LogginLine;
+	//}
 	string _PrepareLoginRecord(string separator = "#//#")
 	{
 		string LogginLine = "";
 		LogginLine += ClsDateLibrary::GetSystemTimeDateString() + separator;
 		LogginLine += username + separator;
-		LogginLine +=  EnctyptedPassword(password)+ separator;
+		LogginLine +=  password+ separator;
 		LogginLine += to_string(permission);
 		return LogginLine;
 	}
-	static ClsUser _ConvertLineUserObject(string line, string separator = "#//#")
+	/*static ClsUser _ConvertLineUserObject(string line, string separator = "#//#")
 	{
 		vector <string>VUser = ClsString::SplitString(line, separator);
 		return ClsUser(enUsersMode::eUpdatedMode, VUser[0], VUser[1], VUser[2], VUser[3], VUser[4],DectyptedPassword( VUser[5]), stoi(VUser[6]));
+	}*/
+	static ClsUser _ConvertLineUserObject(string line, string separator = "#//#")
+	{
+		vector <string>VUser = ClsString::SplitString(line, separator);
+		return ClsUser(enUsersMode::eUpdatedMode, VUser[0], VUser[1], VUser[2], VUser[3], VUser[4],VUser[5], stoi(VUser[6]));
 	}
 	static vector<ClsUser> _LoadDataLineFromFile()
 	{
@@ -63,7 +86,7 @@ private:
 		}
 		return VUser;
 	}
-	static string _ConvertUserObjectToLine(ClsUser user, string separator = "#//#")
+	/*static string _ConvertUserObjectToLine(ClsUser user, string separator = "#//#")
 	{
 		string LineUserData = "";
 		LineUserData += user.FName + separator;
@@ -72,6 +95,18 @@ private:
 		LineUserData += user.Phone + separator;
 		LineUserData += user.username + separator;
 		LineUserData +=EnctyptedPassword(user.password)+ separator;
+		LineUserData += to_string(user.permission);
+		return LineUserData;
+	}*/
+	static string _ConvertUserObjectToLine(ClsUser user, string separator = "#//#")
+	{
+		string LineUserData = "";
+		LineUserData += user.FName + separator;
+		LineUserData += user.LName + separator;
+		LineUserData += user.Email + separator;
+		LineUserData += user.Phone + separator;
+		LineUserData += user.username + separator;
+		LineUserData +=user.password+ separator;
 		LineUserData += to_string(user.permission);
 		return LineUserData;
 	}
