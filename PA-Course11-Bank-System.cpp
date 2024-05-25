@@ -2,37 +2,52 @@
 //
 
 #include <iostream>
-//#include"ClsBankClient.h"
-#include"ClsLoginScreen.h"
+//#include"ClsMainScreen.h"
+//#include"ClsLoginScreen.h"
+#include"ClsCurrencies.h"
+//#include"ClsUser.h"
 using namespace std;
 
+static void Print(ClsCurrencies Currency)
+{
+	cout << "\nCurrency Card:\n";
+	cout << "_____________________________\n";
+	cout << "\nCountry    : " << Currency.GetCountryName();
+	cout << "\nCode       : " << Currency.GetCurrencyCode();
+	cout << "\nName       : " << Currency.GetCurrencyName();
+	cout << "\nRate(1$) = : " << Currency.Rate();
 
+	cout << "\n_____________________________\n";
+
+}
 int main()
 {
-
-	while (true)
-{
-	if (!ClsLoginScreen::ShowLoginScreen())
-{
-	break;
-}
-}
-	//ClsMainScreen::ShowMainMenueScreen();
-       system("pause>0");
-       return 0;
-
-
-
-	/*ClsBankClient Client1= ClsBankClient::Find("A101");
-	Client1.Print();
-	ClsBankClient Client2 = ClsBankClient::Find("A101", "1239");
-	Client2.Print();
-	cout << endl;
-	cout << "Is Client Exist: " << endl;
-	cout<<Client2.IsClientExist("A108");*/
 	
+		ClsCurrencies CurrencyObj1 = CurrencyObj1.FindByCurrencyCode("USD");
+		if (CurrencyObj1.IsEmpty())
+		{
+			cout << "NotFound\n";
+		}
+		else
+		{
+			Print(CurrencyObj1);
+		}
+		ClsCurrencies CurrencyObj2 = CurrencyObj2.FindByCountry("egypt");
+		if (CurrencyObj2.IsEmpty())
+		{
+			cout << "Not found\n";
+		}
+		else
+		{
+			Print(CurrencyObj2);
+		}
+		cout << "After Updating: ";
+		CurrencyObj2.UpdatedRate(30);
+		Print(CurrencyObj2);
 
-}
+	system("pause>0");
+	return 0;
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
