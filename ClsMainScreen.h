@@ -23,8 +23,8 @@ showClientList=1, Addnewclient=2, DeleteNewClient=3, UpdateClientinfo=4, FindCli
     };
 static short _ReadMainMenueOption()
 	{
-		cout <<setw(37)<<left<< "" << "Please choose what do you want to do from[1 to 9]" << endl;
-		short choice= ClsInputValidate::ReadIntNumberBetween(1, 9, "Error,this number is not between the range");
+		cout <<setw(37)<<left<< "" << "Please choose what do you want to do from[1 to 10]" << endl;
+		short choice= ClsInputValidate::ReadIntNumberBetween(1, 10, "Error,this number is not between the range");
 		return choice;
 	}
 static void _GoBackMainMenue()

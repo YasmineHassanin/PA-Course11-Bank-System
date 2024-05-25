@@ -3,6 +3,7 @@
 #include"ClsInputValidate.h"
 #include<iostream>
 #include"ClsMainScreen.h"
+#include"ClsShowListCurrency.h"
 using namespace std;
 class ClsCurrencyExchangeMainScreen : protected ClsScreen
 {
@@ -26,7 +27,8 @@ private:
 	
 	static void  _ShowListCurrency()
 	{
-		cout << "code of list currency will be here\n";
+		//cout << "code of list currency will be here\n";
+		ClsShowListCurrency::ShowListCurrencyScreen();
 	}
 	static void _ShowFindCurrency()
 	{
@@ -66,7 +68,7 @@ private:
 			break;
 		case enCurrencyOption::eMainMenue:
 		{
-
+			//Do nothing 
 		}
 			
 		}
