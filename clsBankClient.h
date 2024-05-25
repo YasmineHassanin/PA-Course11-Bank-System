@@ -15,9 +15,7 @@ private:
 	string _PinCode;
 	float _AccountBalance;
 	bool _MarkedToDelete = false;
-
-	
-
+	struct stTransferLogsData;
 	static ClsBankClient _ConvertLineToClientObject(string Line,string Separator="#//#")
 	{
 		vector<string>Vclient;
@@ -105,6 +103,44 @@ private:
 		_SaveClientDataToFile(_Vclient);
 
 	}
+	 string _PrepareTransferDataLog(float Amount,ClsBankClient DestinationClient,string UserName,string Separator="#//#")
+	 {
+		 string TransferLogRecord = "";
+		 TransferLogRecord += ClsDateLibrary::GetSystemTimeDateString() + Separator;
+		 TransferLogRecord += GetAccountNumber() + Separator;
+		 TransferLogRecord += DestinationClient.GetAccountNumber() + Separator;
+		 TransferLogRecord += to_string(Amount) + Separator;
+		 TransferLogRecord += to_string(accountBalnce) + Separator;
+		 TransferLogRecord += to_string(DestinationClient.accountBalnce) + Separator;
+		 TransferLogRecord += UserName;
+		 return TransferLogRecord;
+
+	 }
+	 static	 stTransferLogsData _ConvertDataLineTransferLogsToRecord(string line,string separator="#//#")
+	 {
+		 stTransferLogsData TransferRecordData;
+		 vector<string> VTransferRecordStoredDate= ClsString::SplitString(line, separator);
+		 TransferRecordData.DateTime = VTransferRecordStoredDate[0];
+		 TransferRecordData.S_acountNumber = VTransferRecordStoredDate[1];
+		 TransferRecordData.D_accountnumber = VTransferRecordStoredDate[2];
+		 TransferRecordData.amount = stoi(VTransferRecordStoredDate[3]);
+		 TransferRecordData.S_accountBalance = stod(VTransferRecordStoredDate[4]);
+		 TransferRecordData.D_accountBalance = stod(VTransferRecordStoredDate[5]);
+		 TransferRecordData.UserName = VTransferRecordStoredDate[6];
+		 return TransferRecordData;
+	 }
+	 
+	void _RegisterTransferLog(float Amount, ClsBankClient DestinationClient, string USERNAME)
+	 {
+		string DataLine = _PrepareTransferDataLog(Amount, DestinationClient,USERNAME);
+		fstream myfile;
+		myfile.open("TransferLog.txt", ios::out|ios::app);
+		if(myfile.is_open())
+		{
+			myfile << DataLine << endl;
+			myfile.close();
+		}
+	 }
 	
 	void _AddNew()
 	 {
@@ -121,6 +157,16 @@ public:
 		_PinCode = PinCode;
 		_AccountBalance = AccountBalance;
 	}
+	struct stTransferLogsData
+	{
+		string DateTime;
+		string S_acountNumber;
+		string D_accountnumber;
+		float amount;
+		float S_accountBalance;
+		float D_accountBalance;
+		string UserName;
+	};
 	bool IsEmpty()
 	{
 		return (_Mode == enMode::EmptyMode);
@@ -151,20 +197,21 @@ public:
 		return _AccountBalance;
 	}
 	__declspec(property(get = GetAccountBalance, put = setAccountBalance))float accountBalnce;
-	void Print()
-	{
-		cout << "\nClient Card:";
-		cout << "\n___________________";
-		cout << "\nFirstName   : " << FName;
-		cout << "\nLastName    : " << LName;
-		cout << "\nEmail       : " << Email;
-		cout << "\nPhone       : " << Phone;
-		cout << "\nAcc. Number : " << _AccountNumber;
-		cout << "\nPassword    : " << _PinCode;
-		cout << "\nBalance     : " << _AccountBalance;
-		cout << "\n___________________\n";
+	/*No UI code relted inside Object*/
+	//void Print()
+	//{
+	//	cout << "\nClient Card:";
+	//	cout << "\n___________________";
+	//	cout << "\nFirstName   : " << FName;
+	//	cout << "\nLastName    : " << LName;
+	//	cout << "\nEmail       : " << Email;
+	//	cout << "\nPhone       : " << Phone;
+	//	cout << "\nAcc. Number : " << _AccountNumber;
+	//	cout << "\nPassword    : " << _PinCode;
+	//	cout << "\nBalance     : " << _AccountBalance;
+	//	cout << "\n___________________\n";
 
-	}
+	//}
 	static	ClsBankClient GetAddNewClient(string AccountNumber)
 	{
 		return ClsBankClient(enMode::AddNew, "", "", "", "", AccountNumber, "", 0);
@@ -274,23 +321,51 @@ public:
 	}
 	return TotalaccountBalance;
 	}
-  void Deposit(double Amount)
-  {
-	  _AccountBalance += Amount;
-	  Save();
-  }
-  bool WithDraw(double Amount)
-  {
-	  if (Amount > _AccountBalance)
+	  void Deposit(double Amount)
 	  {
-		  return false;
-	  }
-	  else
-	  {
-		  _AccountBalance -= Amount;
+		  _AccountBalance += Amount;
 		  Save();
 	  }
-	  //return true;
-  }
+	  bool WithDraw(double Amount)
+	  {
+		  if (Amount > _AccountBalance)
+		  {
+			  return false;
+		  }
+		  else
+		  {
+			  _AccountBalance -= Amount;
+			  Save();
+		  }
+		  //return true;
+	  }
+	  bool Transfer(float amount,ClsBankClient & DestinationClient,string UserName)
+	  {
+		  if (amount > accountBalnce)
+			  return false;
+		  WithDraw(amount);
+		  DestinationClient.Deposit(amount);
+		  _RegisterTransferLog(amount, DestinationClient, UserName);
+		  return true;
+	  }
+	
+	  static vector<stTransferLogsData>GetTransferLogList()
+	  {
+		  vector<stTransferLogsData>VloginUsers;
+		  fstream myfile;
+		  myfile.open("TransferLog.txt", ios::in);/*Read mode */
+		  if (myfile.is_open())
+		  {
+			  string line;
+			  stTransferLogsData LoginRegisterRecord;
+			  while (getline(myfile, line))
+			  {
+				  LoginRegisterRecord = _ConvertDataLineTransferLogsToRecord(line);
+				  VloginUsers.push_back(LoginRegisterRecord);
+			  }
+			  myfile.close();
+		  }
+		  return VloginUsers;
+	  }
 };
 

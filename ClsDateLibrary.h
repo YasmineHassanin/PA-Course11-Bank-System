@@ -11,7 +11,9 @@ private:
 	short _Days = 1;
     short _Months = 1;
     short _Year = 1900;
-
+    short _hour = 1;
+    short _minute = 1;
+    short _second = 1;
 public:
     ClsDateLibrary()
     {
@@ -185,7 +187,20 @@ public:
         days = now->tm_mday;
         return ClsDateLibrary(days,months,year);
     }
-  
+
+  static string GetSystemTimeDateString()
+  {
+      time_t t = time(0);
+      tm* now = localtime(&t);
+      short year, months, days, hour, minute, second;
+      year = now->tm_year + 1900;
+      months = now->tm_mon + 1;
+      days = now->tm_mday;
+      hour = now->tm_hour;
+      minute = now->tm_min;
+      second = now->tm_sec;
+      return (to_string(hour) + ":" + to_string(minute) + ":" + to_string(second) + "-" + to_string(days) + "/" + to_string(months) + "/" + to_string(year));
+  }
    static short DayOfWeakOrder(short day, short month, short year)
     {
         short a, m, y, d;

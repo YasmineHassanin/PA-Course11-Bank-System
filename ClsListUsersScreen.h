@@ -30,8 +30,8 @@ public:
 		cout << "" << "_________________________________________\n" << endl;
 		cout << setw(8) << left << "" << "|" << left << setw(15) << "UserName";
 		cout << "|" << setw(20) << "FullName";
-		cout << "|" << setw(12) << "Phone";
 		cout << "|" << setw(20) << "Email";
+		cout << "|" << setw(12) << "Phone";
 		cout << "|" << setw(10) << "Password";
 		cout << "|" << setw(12) << "permissions";
 		cout << setw(8) << left << "" << "\n\t_______________________________________________________";

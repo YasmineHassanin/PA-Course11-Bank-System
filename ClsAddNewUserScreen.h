@@ -87,6 +87,12 @@ private:
 		{
 			permission += ClsUser::enPermissions::eManageUsers;
 		}
+		cout << " Login Register List y/n? ";
+		cin >> answer;
+		if (answer == 'Y' || answer == 'y')
+		{
+			permission += ClsUser::enPermissions::eLoginRegister;
+		}
 		return permission;
 	}
 public:

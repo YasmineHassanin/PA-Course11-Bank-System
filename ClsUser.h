@@ -1,6 +1,7 @@
 #pragma once
 #include "ClsPerson.h"
 #include"ClsInputValidate.h"
+#include"Clsutil.h"
 #include<string>
 #include<vector>
 #include<iomanip>
@@ -18,6 +19,33 @@ private:
 	int _Permission;
 	enUsersMode _Mode;
 	bool _MarkedToDeleted = false;
+	struct stLoginRegisterRecord;
+	
+	static  stLoginRegisterRecord _ConvertLoginRegisterLineToRecord(string line,string separator="#//#")
+	 {
+		stLoginRegisterRecord loginregisterrecord;
+		vector<string>loginregisterDataLine = ClsString::SplitString(line, separator);
+		loginregisterrecord.DateTime = loginregisterDataLine[0];
+		loginregisterrecord.Username = DectyptedPassword( loginregisterDataLine[1]);
+	loginregisterrecord.Password =  loginregisterDataLine[2];
+		loginregisterrecord.permissions = stoi(loginregisterDataLine[3]);
+		return loginregisterrecord;
+	 }
+
+	string _PrepareLoginRecord(string separator = "#//#")
+	{
+		string LogginLine = "";
+		LogginLine += ClsDateLibrary::GetSystemTimeDateString() + separator;
+		LogginLine += username + separator;
+		LogginLine +=  EnctyptedPassword(password)+ separator;
+		LogginLine += to_string(permission);
+		return LogginLine;
+	}
+	static ClsUser _ConvertLineUserObject(string line, string separator = "#//#")
+	{
+		vector <string>VUser = ClsString::SplitString(line, separator);
+		return ClsUser(enUsersMode::eUpdatedMode, VUser[0], VUser[1], VUser[2], VUser[3], VUser[4],DectyptedPassword( VUser[5]), stoi(VUser[6]));
+	}
 	static vector<ClsUser> _LoadDataLineFromFile()
 	{
 		vector <ClsUser>VUser;
@@ -35,6 +63,18 @@ private:
 		}
 		return VUser;
 	}
+	static string _ConvertUserObjectToLine(ClsUser user, string separator = "#//#")
+	{
+		string LineUserData = "";
+		LineUserData += user.FName + separator;
+		LineUserData += user.LName + separator;
+		LineUserData += user.Email + separator;
+		LineUserData += user.Phone + separator;
+		LineUserData += user.username + separator;
+		LineUserData +=EnctyptedPassword(user.password)+ separator;
+		LineUserData += to_string(user.permission);
+		return LineUserData;
+	}
 	static void _AddDataLineToFile(string stDataLine)
 	{
 		fstream myfile;
@@ -46,27 +86,12 @@ private:
 		}
 		
 	}
-	static ClsUser _ConvertLineUserObject(string line, string separator="#//#")
-	{
-		vector <string>VUser = ClsString::SplitString(line, separator);
-		return ClsUser(enUsersMode::eUpdatedMode, VUser[0], VUser[1], VUser[2], VUser[3], VUser[4], VUser[5], stoi(VUser[6]));
-	}
 	static ClsUser _GetEmptyUserObject()
 	{
 		return ClsUser(enUsersMode::eEmptyMode, "", "", "", "", "", "", 0);
 	}
-	static string _ConvertUserObjectToLine(ClsUser user,string separator="#//#")
-	{
-		string LineUserData = "";
-		LineUserData += user.FName + separator;
-		LineUserData += user.LName + separator;
-		LineUserData += user.Email + separator;
-		LineUserData += user.Phone + separator;
-		LineUserData += user.username + separator;
-		LineUserData += user.password + separator;
-		LineUserData +=to_string( user.permission);
-		return LineUserData;
-	}
+	
+	
     static void	_SaveUserDataToFile(vector<ClsUser>VUser)
 	{
 		fstream myfile;
@@ -103,6 +128,14 @@ private:
 	{
 		_AddDataLineToFile(_ConvertUserObjectToLine(*this));
 	}
+	 static string EnctyptedPassword(string Password)
+	 {
+		 return Clsutil::encryptionText(Password,2);
+	 }
+	 static string DectyptedPassword(string Password)
+	 {
+		 return Clsutil::decryptionText(Password, 2);
+	 }
 public:
 	ClsUser(enUsersMode mode,string Firstname, string Lastname, string Email, string Phone, string username, string password, int permission)
 		:ClsPerson(Firstname, Lastname, Email, Phone)
@@ -112,6 +145,13 @@ public:
 		_Password = password;
 		_Permission = permission;
 	}
+	struct stLoginRegisterRecord
+	{
+		string DateTime;
+		string Username;
+		string Password;
+		int permissions;
+	};
 	/*Set Username*/
 	void SetUserName(string username)
 	{
@@ -214,6 +254,7 @@ public:
 			break;
 		}
 		case enUsersMode::AddNewMode:
+		{
 			if (IsUserExist(_UserName))
 			{
 				return enSaveResults::enSaveFaileduserAlreadyExist;
@@ -224,6 +265,8 @@ public:
 				_Mode = enUsersMode::eUpdatedMode;
 				return enSaveResults::svSucceeded;
 			}
+		}
+
 		}
 	}
 	static ClsUser GetAddNewUser(string Username)
@@ -270,7 +313,7 @@ public:
 	//}
 	enum enPermissions
 	{
-		eAll=-1,eShowListClients=1,eAddNewClients=2,eDeleteClients=4,eUpdateClients=8,eFindClients=16,eTransaction=32,eManageUsers=64
+		eAll=-1,eShowListClients=1,eAddNewClients=2,eDeleteClients=4,eUpdateClients=8,eFindClients=16,eTransaction=32,eManageUsers=64,eLoginRegister=128
 	};
 	 bool CheckAccessPrmissions(enPermissions permissions)
 	{
@@ -282,5 +325,35 @@ public:
 		 else
 			 return false;
 	}
+	  void RegisterLogin()
+	 {
+		  string stDataLine = _PrepareLoginRecord();
+		 fstream myfile;
+		 myfile.open("LoginRegister.txt", ios::out | ios::app);
+		 if (myfile.is_open())
+		 {
+			 myfile << stDataLine << endl;
+			 myfile.close();
+		 }
+	 }
+	
+	  static vector<stLoginRegisterRecord>GetLoginRegisterList()
+	  {
+		  vector<stLoginRegisterRecord>VloginUsers;
+		  fstream myfile;
+		  myfile.open("LoginRegister.txt", ios::in);/*Read mode */
+		  if (myfile.is_open())
+		  {
+			  string line;
+			  stLoginRegisterRecord LoginRegisterRecord;
+			  while (getline(myfile, line))
+			  {
+				  LoginRegisterRecord = _ConvertLoginRegisterLineToRecord(line);
+				  VloginUsers.push_back(LoginRegisterRecord);
+			  }
+			  myfile.close();
+		  }
+		  return VloginUsers;
+	  }
 };
 
