@@ -4,6 +4,9 @@
 #include<iostream>
 #include"ClsMainScreen.h"
 #include"ClsShowListCurrency.h"
+#include"ClsFindCurrencyScreen.h"
+#include"ClsUpdateCurrencyRateScreen.h"
+#include"ClsCurrencyClculatorScreen.h"
 using namespace std;
 class ClsCurrencyExchangeMainScreen : protected ClsScreen
 {
@@ -32,40 +35,52 @@ private:
 	}
 	static void _ShowFindCurrency()
 	{
-		cout << "code of find currency will be here\n";
+		//cout << "code of find currency will be here\n";
+		ClsFindCurrencyScreen::ShowFindCurrencyScreen();
 	}
 	static void _ShowUpdateCurrency()
 	{
-		cout << "code of update currency will be here\n";
+		//cout << "code of update currency will be here\n";
+		ClsUpdateCurrencyRateScreen::ShowUpdateCurrencyScreen();
 	}
 	static void _ShowCurrencyCalculator()
 	{
-		cout << "code of show currency calculator will be here\n";
+		//cout << "code of show currency calculator will be here\n";
+		ClsCurrencyClculatorScreen::ShowCurrencyClculatorScreen();
 	}
 	static void PerformCurrencyExchangeOption(enCurrencyOption option)
 	{
 		switch (option)
 		{
 		case enCurrencyOption::eListCurrencies:
+		{
 			system("cls");
 			_ShowListCurrency();
 			GoBackToCurrencyScreen();
 			break;
+		}
 		case enCurrencyOption::eFindCurrencies:
+		{
 			system("cls");
 			_ShowFindCurrency();
 			GoBackToCurrencyScreen();
 			break;
+		}
 		case enCurrencyOption::eUpdateCurrencies:
+		{
 			system("cls");
 			_ShowUpdateCurrency();
 			GoBackToCurrencyScreen();
 			break;
+		}
 		case enCurrencyOption::eCurrencyCalculator:
+		{
 			system("cls");
 			_ShowCurrencyCalculator();
 			GoBackToCurrencyScreen();
 			break;
+		}
+			
 		case enCurrencyOption::eMainMenue:
 		{
 			//Do nothing 

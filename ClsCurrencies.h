@@ -70,7 +70,7 @@ static string _ConvertCurrencyObjectToLine(ClsCurrencies Currency,string separat
 		Vcurrencies = _LoadDataFromFile();
 		for (ClsCurrencies& C : Vcurrencies)
 		{
-			if (C.GetCountryName() == GetCountryName())
+			if (C.GetCurrencyCode() == GetCurrencyCode())
 			{
 				C = *this;
 				break;
@@ -172,5 +172,23 @@ public:
 	{
 		return _LoadDataFromFile();
 	}
+	 float ConvertToUSD(float amount)
+	{
+		return (float)amount/Rate();
+	}
+	 float ConvertCurrencyToOtherCurrency(ClsCurrencies currencyTo, float amount)
+	 {
+		 float AmountInUSD = ConvertToUSD(amount);
+		 if (currencyTo.GetCurrencyCode() == "USD")
+		 {
+			 return AmountInUSD;
+		 }
+		 else
+		 {
+			 return  (float)(AmountInUSD * currencyTo.Rate());
+		 }
+		
+		 
+	 }
 };
 
